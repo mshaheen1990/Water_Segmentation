@@ -1,1 +1,7 @@
+project_root: /content/drive/MyDrive/WaterMaskProject
 
+clean_manifest: /content/drive/MyDrive/WaterMaskProject/results/clean_manifest.csv
+split_file: /content/drive/MyDrive/WaterMaskProject/splits/uuid_split_seed42.json
+
+results_dir: /content/drive/MyDrive/WaterMaskProject/results
+checkpoint_dir: /content/drive/MyDrive/WaterMaskProject/checkpoints
