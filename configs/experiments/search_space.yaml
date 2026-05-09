@@ -1,0 +1,10 @@
+base_experiment_config: configs/experiments/unet_earlyfusion.yaml
+results_dir: results
+max_configs: 12
+
+search_space:
+  epochs: [12, 16, 20]
+  losses: [bce_dice, focal_dice, tversky]
+  crop_sizes: [64, 128]
+  model_variants: [unet]
+  thresholds: [0.3, 0.4, 0.5, 0.6, 0.7]

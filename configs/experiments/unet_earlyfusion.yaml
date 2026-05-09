@@ -1,0 +1,24 @@
+paths_config: configs/paths_colab.yaml
+output_dir: /content/drive/MyDrive/WaterMaskProject/results/unet_earlyfusion
+
+data:
+  image_size: 64
+  planet_channels: 8
+  hec_channels: 1
+  batch_size: 16
+  buffer_size: 1024
+  seed: 42
+
+model:
+  base_filters: 32
+  use_bn: true
+  dropout: 0.1
+
+training:
+  n_splits: 5
+  epochs: 30
+  lr: 0.001
+
+eval:
+  model_path: /content/drive/MyDrive/WaterMaskProject/results/unet_earlyfusion/unet_earlyfusion_final.keras
+  output_json: /content/drive/MyDrive/WaterMaskProject/results/unet_earlyfusion/heldout_test_metrics_eval.json
