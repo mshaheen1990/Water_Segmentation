@@ -1,0 +1,10 @@
+tensorflow
+numpy
+pandas
+scikit-learn
+opencv-python
+tifffile
+imagecodecs
+openpyxl
+pyyaml
+matplotlib
