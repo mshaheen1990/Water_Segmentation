@@ -91,6 +91,8 @@ def upsert_experiment(results_dir, row):
 
 
 def main(rerun=False):
+    supported_crop_sizes = {64}
+
     search_cfg = yaml.safe_load(Path("configs/experiments/search_space.yaml").read_text())
     exp_cfg = yaml.safe_load(Path(search_cfg["base_experiment_config"]).read_text())
     paths = yaml.safe_load(Path(exp_cfg["paths_config"]).read_text())
@@ -114,6 +116,9 @@ def main(rerun=False):
     existing_fold_df = read_csv_if_exists(fold_path, ["exp_id", "fold"])
 
     for exp_id, (epochs, loss_name, crop, variant) in enumerate(grid, start=1):
+        if int(crop) not in supported_crop_sizes:
+            print(f"[SKIP] exp_id={exp_id} crop_size={crop} unsupported; supported={sorted(supported_crop_sizes)}")
+            continue
         dcfg_exp = DataConfig(**{**dcfg.__dict__, "image_size": int(crop)})
 
         for fold, (tr, va) in enumerate(gkf.split(dev_df, groups=dev_df["UUID"]), start=1):
