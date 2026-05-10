@@ -1,0 +1,1 @@
+exp_id,fold,model_variant,loss,epochs,tiles_per_image,val_dice,val_iou,threshold,elapsed_sec
