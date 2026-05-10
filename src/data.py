@@ -55,7 +55,17 @@ def _fix_channels(arr, target_ch):
     return arr
 
 
+def _pad_to_min_size(arr, size):
+    h, w = arr.shape[:2]
+    ph, pw = max(size - h, 0), max(size - w, 0)
+    if ph == 0 and pw == 0:
+        return arr
+    top, bottom = ph // 2, ph - (ph // 2)
+    left, right = pw // 2, pw - (pw // 2)
+    return np.pad(arr, ((top, bottom), (left, right), (0, 0)), mode="constant")
+
 def _center_crop(arr, size):
+    arr = _pad_to_min_size(arr, size)
     h, w = arr.shape[:2]
     y0 = max((h - size) // 2, 0)
     x0 = max((w - size) // 2, 0)
@@ -63,6 +73,7 @@ def _center_crop(arr, size):
 
 
 def _random_crop(arr, size, rng):
+    arr = _pad_to_min_size(arr, size)
     h, w = arr.shape[:2]
     if h <= size or w <= size:
         return _center_crop(arr, size)

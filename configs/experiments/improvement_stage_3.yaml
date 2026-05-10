@@ -1,0 +1,24 @@
+base_experiment_config: configs/experiments/unet_earlyfusion.yaml
+output_dir: results/improvement_stage_3
+thresholds: [0.5, 0.552, 0.6]
+candidates:
+  - model_variant: se_unet
+    loss: focal_dice
+    epochs: 20
+    tiles_per_image: 4
+  - model_variant: se_unet
+    loss: focal_dice
+    epochs: 20
+    tiles_per_image: 6
+  - model_variant: se_unet
+    loss: focal_tversky
+    epochs: 20
+    tiles_per_image: 4
+  - model_variant: cbam_unet
+    loss: focal_dice
+    epochs: 20
+    tiles_per_image: 4
+  - model_variant: dual_encoder_unet
+    loss: focal_dice
+    epochs: 20
+    tiles_per_image: 4
