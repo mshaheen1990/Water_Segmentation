@@ -13,6 +13,7 @@ from sklearn.model_selection import GroupKFold
 from data import DataConfig, load_manifest_and_split, make_dataset
 from losses import bce_dice_loss, dice_coef, iou_metric
 from models import build_unet_binary
+from evaluate_tiled_full_image import run_tiled_evaluation
 
 
 def focal_dice_loss(y_true, y_pred, gamma=2.0, alpha=0.25):
@@ -109,6 +110,7 @@ def main(rerun=False):
     log_path = results_dir / "experiment_log.csv"
     leaderboard_path = results_dir / "leaderboard_validation.csv"
     final_path = results_dir / "final_test_results.csv"
+    tiled_path = results_dir / "tiled_full_image_test_results.csv"
 
     dcfg = DataConfig(manifest_path=paths["clean_manifest"], split_path=paths["split_file"], **exp_cfg["data"])
     _, dev_df, test_df = load_manifest_and_split(dcfg)
@@ -173,6 +175,8 @@ def main(rerun=False):
     model = build_unet_binary(input_shape=(dcfg_best.image_size, dcfg_best.image_size, 9), **exp_cfg["model"])
     model.compile(optimizer=tf.keras.optimizers.Adam(exp_cfg["training"]["lr"]), loss=get_loss(best_cfg["loss"]), metrics=[dice_coef, iou_metric])
     model.fit(make_dataset(dev_df, dcfg_best, True), epochs=best_cfg["epochs"], verbose=0)
+    best_ckpt = results_dir / 'best_validation_model.keras'
+    model.save(best_ckpt)
 
     y_true, y_prob = [], []
     for xb, yb in make_dataset(test_df, dcfg_best, False):
@@ -185,12 +189,14 @@ def main(rerun=False):
     dice = (2.0 * inter + 1e-7) / (np.sum(y_true) + np.sum(yp) + 1e-7)
     iou = (inter + 1e-7) / (union + 1e-7)
     pd.DataFrame([{"heldout_samples": int(len(test_df)), "threshold": best_cfg["threshold"], "test_iou": float(iou), "test_dice": float(dice)}]).to_csv(final_path, index=False)
+    tiled_out, tiled_summary = run_tiled_evaluation(model, test_df, dcfg_best, threshold=best_cfg['threshold'], out_csv=str(tiled_path))
 
     print("\n[FINAL]")
     print(f"best_experiment={best_cfg}")
     print(f"best_mean_val_dice={best['mean_val_dice']:.6f}")
     print(f"final_test_iou={iou:.6f} final_test_dice={dice:.6f}")
-    print(f"outputs: fold={fold_path} log={log_path} leaderboard={leaderboard_path} failed={failed_path} final_test={final_path}")
+    print(f"outputs: fold={fold_path} log={log_path} leaderboard={leaderboard_path} failed={failed_path} final_test={final_path} tiled_test={tiled_out} ckpt={best_ckpt}")
+    print(f"tiled_test_mean_iou={tiled_summary['mean_iou']:.6f} tiled_test_mean_dice={tiled_summary['mean_dice']:.6f}")
     print(f"elapsed_total={time.time()-t0:.1f}s")
     print("Resume after disconnect: python src/run_experiments.py")
 
