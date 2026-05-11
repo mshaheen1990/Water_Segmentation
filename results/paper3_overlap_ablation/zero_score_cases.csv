@@ -1,0 +1,1 @@
+config_id,fold,sample_idx,threshold,pred_pos_before,pred_pos_after,gt_pos,pct_removed,became_empty,iou_before,dice_before,iou_after,dice_after
