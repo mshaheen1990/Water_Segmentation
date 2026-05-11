@@ -1,0 +1,55 @@
+base_experiment_config: configs/experiments/unet_earlyfusion.yaml
+output_dir: results/paper3_overlap_ablation
+checkpoint_path: /content/drive/MyDrive/WaterMaskProject/results/best_stage2_se_unet_8548/best_stage2_model.keras
+
+validation:
+  n_splits: 5
+  threshold_start: 0.30
+  threshold_end: 0.75
+  threshold_step: 0.01
+  configs:
+    - config_id: cfg_01
+      tile_size: 64
+      stride: 64
+      blending: uniform
+      postprocess: {remove_small_components: 0, fill_holes: 0, opening: 0, closing: 0}
+    - config_id: cfg_02
+      tile_size: 64
+      stride: 32
+      blending: uniform
+      postprocess: {remove_small_components: 0, fill_holes: 0, opening: 0, closing: 0}
+    - config_id: cfg_03
+      tile_size: 64
+      stride: 32
+      blending: hann
+      postprocess: {remove_small_components: 0, fill_holes: 0, opening: 0, closing: 0}
+    - config_id: cfg_04
+      tile_size: 64
+      stride: 16
+      blending: uniform
+      postprocess: {remove_small_components: 0, fill_holes: 0, opening: 0, closing: 0}
+    - config_id: cfg_05
+      tile_size: 64
+      stride: 16
+      blending: hann
+      postprocess: {remove_small_components: 0, fill_holes: 0, opening: 0, closing: 0}
+    - config_id: cfg_06
+      tile_size: 64
+      stride: 32
+      blending: uniform
+      postprocess: {remove_small_components: 5, fill_holes: 0, opening: 0, closing: 0}
+    - config_id: cfg_07
+      tile_size: 64
+      stride: 32
+      blending: uniform
+      postprocess: {remove_small_components: 0, fill_holes: 5, opening: 0, closing: 0}
+    - config_id: cfg_08
+      tile_size: 64
+      stride: 32
+      blending: uniform
+      postprocess: {remove_small_components: 0, fill_holes: 0, opening: 0, closing: 1}
+    - config_id: cfg_09
+      tile_size: 64
+      stride: 32
+      blending: uniform
+      postprocess: {remove_small_components: 0, fill_holes: 0, opening: 1, closing: 0}
