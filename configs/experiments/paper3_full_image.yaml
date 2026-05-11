@@ -1,0 +1,40 @@
+base_experiment_config: configs/experiments/unet_earlyfusion.yaml
+output_dir: results/paper3_full_image
+checkpoint_path: results/improvement_stage_2/best_stage2_model.keras
+
+validation:
+  n_splits: 5
+  threshold_start: 0.30
+  threshold_end: 0.75
+  threshold_step: 0.01
+  configs:
+    - tile_size: 64
+      stride: 64
+      blending: uniform
+      padding: true
+      postprocess:
+        remove_small_components: 0
+        fill_holes: 0
+        opening: 0
+        closing: 0
+        hec_guided: false
+    - tile_size: 64
+      stride: 32
+      blending: uniform
+      padding: true
+      postprocess:
+        remove_small_components: 10
+        fill_holes: 10
+        opening: 1
+        closing: 1
+        hec_guided: false
+    - tile_size: 64
+      stride: 32
+      blending: hann
+      padding: true
+      postprocess:
+        remove_small_components: 10
+        fill_holes: 10
+        opening: 1
+        closing: 1
+        hec_guided: true
