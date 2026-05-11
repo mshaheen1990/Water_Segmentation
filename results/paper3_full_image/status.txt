@@ -1,0 +1,6 @@
+last_update=
+stage=
+config_id=
+fold=
+processed_samples=0
+elapsed_sec=0

@@ -1,0 +1,1 @@
+exp_id,epochs,loss,crop_size,model_variant,mean_val_dice,std_val_dice,mean_threshold
